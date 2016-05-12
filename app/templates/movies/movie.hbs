@@ -1,0 +1,8 @@
+<ol class="breadcrumb">
+  <li>{{#link-to 'movies'}}Movies{{/link-to}}</li>
+  <li class="active">{{model.title}}</li>
+</ol>
+{{movie-details
+  movie=model
+  deleteMovie=(route-action 'deleteMovie')
+}}
