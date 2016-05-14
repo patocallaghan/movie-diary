@@ -1,9 +1,6 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
-  model(params) {
-    this.store.findRecord('movie', params.movie_id);
-  },
   // afterModel(model) {
   //   return Ember.$.ajax({
   //     url: `http://www.omdbapi.com/?t=cloverfield&plot=short&r=json`

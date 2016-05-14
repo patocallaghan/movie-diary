@@ -3,6 +3,9 @@ module.exports = function(app) {
   var express = require('express');
   var moviesRouter = express.Router();
   var bodyParser = require('body-parser');
+  var _ = require('lodash');
+  var Datastore = require('nedb')
+    , db = new Datastore({ filename: 'db/movies.db', autoload: true  });
 
   function daysAgo(days) {
     var d = new Date();
@@ -12,7 +15,6 @@ module.exports = function(app) {
   function generateMovie(id, title, rating, review, date) {
     return {
       "type": "movies",
-      "id": id,
       "attributes": {
         "title": title,
         "rating": rating,
@@ -31,34 +33,37 @@ module.exports = function(app) {
   ];
 
   moviesRouter.get('/', function(req, res) {
-    res.send({
-      'data': movies
+    db.find({ type: 'movies' }, function (err, docs) {
+      res.send(generateJSONAPIResponse(docs));
     });
   });
 
+  function generateJSONAPIResponse(response) {
+    return {
+      data: response
+    };
+  }
+
   moviesRouter.post('/', function(req, res) {
-    console.log('title ' + JSON.stringify(req.body));
-    res.send({
-      "data": {
-        "type": "movies",
-        "id": Math.floor(Math.random()*100),
-        "attributes": {
-          "title": "Cloverfield",
-          "rating": 5,
-          "review": "This was the shit!",
-          "date-watched": Date.now()
-        }
+    var savedMovie = req.body.data.attributes;
+    var movie = {
+      "type": "movies",
+      "attributes": {
+        "title": savedMovie.title,
+        "rating": savedMovie.rating,
+        "review": savedMovie.review,
+        "date-watched": Date.now()
       }
-    })
+    };
+    db.insert(movie, function (err, movie) {
+      res.send(generateJSONAPIResponse(movie))
+    });
   });
 
   moviesRouter.get('/:id', function(req, res) {
-    var requestedMovie = movies.filter(function(movie) {
-      return movie.id == req.params.id
-    });
-    requestedMovie = requestedMovie.length ? requestedMovie[0] : {}
-    res.send({
-      'data': requestedMovie
+    db.findOne({ _id: req.params.id }, function (err, doc) {
+      doc = doc ? doc : {}
+      res.send(generateJSONAPIResponse(doc));
     });
   });
 
@@ -71,10 +76,9 @@ module.exports = function(app) {
   });
 
   moviesRouter.delete('/:id', function(req, res) {
-    movies = movies.filter(function(movie) {
-      return movie.id != req.params.id;
+    db.remove({ _id: req.params.id }, function (err, numRemoved) {
+      res.status(204).end();
     });
-    res.status(204).end();
   });
 
   // The POST and PUT call will not contain a request body
@@ -86,7 +90,6 @@ module.exports = function(app) {
   // After installing, you need to `use` the body-parser for
   // this mock uncommenting the following line:
   //
-  // app.use('/movies', require('body-parser').json());
-  app.use('/movies', require('body-parser').urlencoded({ limit: '2mb', extended: false  }));
+  app.use('/movies', require('body-parser').json({type: 'application/vnd.api+json'}));
   app.use('/movies', moviesRouter);
 };

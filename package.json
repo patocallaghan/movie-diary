@@ -52,6 +52,7 @@
     "morgan": "1.7.0"
   },
   "dependencies": {
-    "body-parser": "1.15.1"
+    "body-parser": "1.15.1",
+    "nedb": "1.8.0"
   }
 }
