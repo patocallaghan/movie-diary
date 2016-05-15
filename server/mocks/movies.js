@@ -3,14 +3,8 @@ module.exports = function(app) {
   var express = require('express');
   var moviesRouter = express.Router();
   var bodyParser = require('body-parser');
-  var _ = require('lodash');
   var Datastore = require('nedb')
     , db = new Datastore({ filename: 'db/movies.db', autoload: true  });
-
-  function daysAgo(days) {
-    var d = new Date();
-    return d.setDate(d.getDate() - days);
-  }
 
   function generateMovie(id, title, rating, review, date) {
     return {
@@ -23,14 +17,6 @@ module.exports = function(app) {
       }
     }
   }
-
-  var movies = [
-    generateMovie(1, 'Casino', 5, 'this was the bomb', daysAgo(5)),
-    generateMovie(2, 'Donnie Darko', 4, 'weird', daysAgo(345)),
-    generateMovie(3, 'PS I Love You', 1, 'missus made me watch it', daysAgo(35)),
-    generateMovie(4, 'La Haine', 3, 'sacre bleu!', daysAgo(124)),
-    generateMovie(5, 'The Intern', 2, 'meh', daysAgo(78))
-  ];
 
   moviesRouter.get('/', function(req, res) {
     db.find({ type: 'movies' }, function (err, docs) {
@@ -52,7 +38,7 @@ module.exports = function(app) {
         "title": savedMovie.title,
         "rating": savedMovie.rating,
         "review": savedMovie.review,
-        "date-watched": Date.now()
+        "date-watched": savedMovie['date-watched']
       }
     };
     db.insert(movie, function (err, movie) {
@@ -67,11 +53,12 @@ module.exports = function(app) {
     });
   });
 
-  moviesRouter.put('/:id', function(req, res) {
-    res.send({
-      'movies': {
-        id: req.params.id
-      }
+  moviesRouter.patch('/:id', function(req, res) {
+    db.update({ _id: req.params.id }, { $set: { attributes: req.body.data.attributes } }, {}, function() {
+      db.findOne({ _id: req.params.id }, function (err, doc) {
+        doc = doc ? doc : {}
+        res.send(generateJSONAPIResponse(doc));
+      });
     });
   });
 
@@ -81,15 +68,6 @@ module.exports = function(app) {
     });
   });
 
-  // The POST and PUT call will not contain a request body
-  // because the body-parser is not included by default.
-  // To use req.body, run:
-
-  //    npm install --save-dev body-parser
-
-  // After installing, you need to `use` the body-parser for
-  // this mock uncommenting the following line:
-  //
   app.use('/movies', require('body-parser').json({type: 'application/vnd.api+json'}));
   app.use('/movies', moviesRouter);
 };

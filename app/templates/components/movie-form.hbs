@@ -8,6 +8,7 @@
       <p>Your review: {{savedMovie.review}}</p>
       <p>Date watched: {{moment-calendar date savedMovie.dateWatched}}</p>
     </div>
+    <a class="hot" {{action 'addAnotherMovie'}}>Add another?</a>
     {{else}}
     <div class="form-group has-feedback {{if model.isValidEmail 'has-success'}}">
       <label>Movie Title</label>
@@ -28,7 +29,14 @@
         onchange=(action (mut rating))
       }}
     </div>
+    <div class="form-group has-feedback">
+      <label>Date watched</label>
+      {{bootstrap-datepicker value=dateWatched}}
+    </div>
     <button class="btn btn-success" {{action 'submit' movieDetails}} disabled={{isSaveDisabled}}>Save</button>
+      {{#if movie}}
+        {{#link-to 'movies.movie' movie (query-params edit=false) class="btn btn-danger"}}Cancel{{/link-to}}
+      {{/if}}
     {{/if}}
   </div>
 </div>

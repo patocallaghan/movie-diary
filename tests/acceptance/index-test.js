@@ -6,17 +6,17 @@ moduleForAcceptance('Acceptance | index');
 test('visiting /index', function(assert) {
   console.log('1');
   visit('/');
-  fillIn('input:first', 'Cloverfield')
+  fillIn('input:first', 'Cloverfield');
   console.log('2');
-  fillIn('textarea:first', 'It was amazing!')
+  fillIn('textarea:first', 'It was amazing!');
   andThen(function() {
     console.log('3');
   });
   andThen(function() {
-    console.log('4')
+    console.log('4');
     assert.equal(currentURL(), '/');
   });
-  console.log('5')
+  console.log('5');
 });
 
 test('visiting /index', function(assert) {
@@ -40,7 +40,7 @@ test('visiting /index', function(assert) {
         }
       }
     })
-  })
+  });
   andThen(function() {
     assert.ok(find('.alert-success:visible').length);
   });

@@ -1,6 +1,13 @@
-<h1>{{movie.title}}</h1>
-<p>{{movie.review}}</p>
-<p>Rating: {{movie.rating}}</p>
-<p>Date Watched: {{moment-calendar movie.dateWatched}}</p>
-<button type="button" class="btn btn-primary" {{action 'edit'}}>Edit</button>
-<button type="button" class="btn btn-default btn-danger" {{action 'deleted'}}>Delete</button>
+{{#if edit}}
+  {{movie-form
+    movie=movie
+    saveMovie=(action this.attrs.updateMovie)
+  }}
+{{else}}
+  <h1>{{movie.title}}</h1>
+  <p>{{movie.review}}</p>
+  <p>Rating: {{movie.rating}}</p>
+  <p>Date Watched: {{moment-calendar movie.dateWatched}}</p>
+  <button type="button" class="btn btn-primary" {{action 'edit'}}>Edit</button>
+  <button type="button" class="btn btn-default btn-danger" {{action this.attrs.deleteMovie}}>Delete</button>
+{{/if}}

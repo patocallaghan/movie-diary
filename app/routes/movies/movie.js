@@ -9,8 +9,14 @@ export default Ember.Route.extend({
   //   }.bind(this));
   // },
   actions: {
+    updateMovie(movieUpdates) {
+      let movie = this.controller.get('model');
+      movie.setProperties(movieUpdates)
+      movie.save()
+        .then(() => this.transitionTo('movies.movie', movie, { queryParams: { edit: false }}));
+    },
     deleteMovie() {
-      var controller = this.controller;
+      let controller = this.controller;
       controller.get('model').destroyRecord().then(function() {
         controller.transitionToRoute('movies');
       });

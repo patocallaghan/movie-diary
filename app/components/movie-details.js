@@ -2,8 +2,11 @@ import Ember from 'ember';
 
 export default Ember.Component.extend({
   actions: {
-    deleted() {
-      this.attrs.deleteMovie();
+    cancel() {
+      this.set('edit', false);
+    },
+    edit() {
+      this.set('edit', true);
     }
   }
 });
