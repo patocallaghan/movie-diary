@@ -1,0 +1,12 @@
+<button class="btn btn-danger" {{action "buttonClicked" "red"}}>Red</button>
+<button class="btn btn-success" {{action "buttonClicked" "green"}}>Green</button>
+<button class="btn btn-primary" {{action "buttonClicked" "blue"}}>Blue</button>
+<button class="btn btn-warning" {{action "buttonClicked" "yellow"}}>Yellow</button>
+
+<p>
+{{#if outputText}}
+  The {{outputText}} button was clicked!
+{{else}}
+  No button was clicked yet.
+{{/if}}
+</p>

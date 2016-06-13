@@ -1,0 +1,16 @@
+<div class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      {{#if hasBlock}}
+        {{yield modalTitle confirmButtonText closeButtonText (action this.attrs.save) (action this.attrs.close)}}
+        {{!yield (hash title=modalTitle confirmButtonText=confirmButtonText closeButtonText=closeButtonText save=(action this.attrs.save) close=(action this.attrs.close))}}
+      {{else}}
+        <div class="modal-header">
+          <h4 class="modal-title">{{modalTitle}}</h4>
+          <button type="button" class="btn btn-default" data-dismiss="modal" {{action attrs.close}}>{{closeButtonText}}</button>
+          <button type="button" class="btn btn-primary" {{action attrs.save}}>{{confirmButtonText}}</button>
+        </div>
+      {{/if}}
+    </div>
+  </div>
+</div>

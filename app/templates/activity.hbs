@@ -1,1 +1,87 @@
-{{outlet}}
+{{randomProperty}}
+<hr>
+
+<h2>Conditionals</h2>
+{{#if propertyIsTrue}}
+  {{propertyIsTrue}}
+{{/if}}
+
+{{#if propertyIsTrue}}
+  {{propertyIsTrue}}
+{{else}}
+  {{propertyIsTrue}}
+{{/if}}
+
+{{#if someProperty}}
+  {{someProperty}} is truthy
+{{else if anotherPropertyToTest}}
+  {{anotherPropertyToTest}} is truthy
+{{else}}
+  Fallback value
+{{/if}}
+
+{{#unless someFalseProperty}}
+  Inverse of true
+{{/unless}}
+
+
+<h2>Looping</h2>
+<ul>
+  {{#each people as |person index|}}
+    <li>{{person.name}} is number {{index}} in the list</li> {{! Pat is number 1 }}
+  {{/each}}
+</ul>
+
+{{#each people as |person index|}}
+  {{person.name}}
+{{else}}
+  No people in our list!
+{{/each}}
+
+<ul>
+  {{!
+    {
+      fanta: ['orange', 'fizzzzzz'],
+      budweiser: ['hops', 'shite']
+    }
+  }}
+  {{#each-in drink as |drink ingredients|}}
+    <li>
+      Drink name: {{drink}}
+      Ingredients:
+      <ul>
+        {{#each ingredients as |ingredient|}}
+          {{ingredient}}
+        {{/each}}
+      </ul>
+    </li>
+  {{/each-in}}
+</ul>
+
+<h2>Helpers</h2>
+{{sum 1 2 3}} {{! 6 }}
+{{sum (multiply 1 2) 3}} {{! 6 }}
+
+<h3>Brucey Bonus: Ember Truth Helpers</h3>
+<h4>Old equals</h4>
+{!
+  // property defined in .js file and used in template
+  propertiesAreEqual: Em.computed.equals('a', 'b')
+}
+{{#if propertiesAreEqual}}
+  a is equal to b
+{{/if}}
+<hr>
+
+<h4>Ember truth helper equals</h4>
+{{#if (eq a b)}}
+  a is equal to b
+{{/if}}
+
+{{#if (not-eq a b)}}
+  a is not equal to b
+{{/if}}
+
+{{#if (or a b)}}
+  a or b is true
+{{/if}}
